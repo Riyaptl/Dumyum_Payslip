@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payslips</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen" class="login-wrap" hidden>
+  <form id="login-form" class="login-card" autocomplete="on">
+    <h1>Payslips</h1>
+    <p class="muted">Accounts login</p>
+    <label>Username <input name="username" autocomplete="username" required autofocus></label>
+    <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+    <button class="btn primary" type="submit">Log in</button>
+    <p id="login-error" class="error" role="alert"></p>
+  </form>
+</div>
+
+<!-- App -->
+<div id="app" hidden>
+  <header class="topbar">
+    <div class="brand" id="brand-name">Payslips</div>
+    <nav>
+      <button class="tab active" data-tab="month">Monthly Entry</button>
+      <button class="tab" data-tab="employees">Employees</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+    <div class="who"><span id="who"></span> <button class="btn small" id="logout">Log out</button></div>
+  </header>
+
+  <!-- Monthly entry -->
+  <main id="tab-month" class="panel">
+    <section class="monthbar">
+      <label>Month <input type="month" id="m-month"></label>
+      <label>Working days <input type="number" id="m-wd" min="0" max="31" step="0.5" class="w80"></label>
+      <button class="btn small" id="m-apply" title="Copy this working days value into every row">Apply to all rows</button>
+      <label>Late penalty (days of pay each) <input type="number" id="m-late" min="0" max="31" step="0.5" class="w80"></label>
+      <label>Uninformed penalty (days of pay each) <input type="number" id="m-unin" min="0" max="31" step="0.5" class="w80"></label>
+      <label>Pay date <input type="date" id="m-paydate"></label>
+    </section>
+    <section class="actions">
+      <button class="btn primary" id="m-save">Save month</button>
+      <button class="btn" id="m-refresh" title="Copy the current Basic and TADA from the Employees tab into this month">Refresh rates from Employees</button>
+      <button class="btn" id="m-xlsx">Export this month (Excel)</button>
+      <button class="btn" id="m-xlsx-all">Export all months (Excel)</button>
+      <span id="m-status" class="muted"></span>
+    </section>
+    <div class="grid-wrap"><table id="grid" class="grid"></table></div>
+    <p class="muted hint">Basic and TADA come from the Employees tab and cannot be edited here. A month keeps the Basic and TADA it was first saved with, so later changes never alter old payslips; if an employee's Basic was 0 or wrong when you saved, fix it on the Employees tab and then use "Refresh rates from Employees" for that month. Only rows you have typed in (or that are already saved) are saved. Half day deducts 0.5 day of basic only. TADA is deducted for inactive days and LWP only. PL and Reserved are stored but do not change the salary.</p>
+  </main>
+
+  <!-- Employees -->
+  <main id="tab-employees" class="panel" hidden>
+    <section class="actions">
+      <button class="btn primary" id="e-add">Add employee</button>
+      <label class="check"><input type="checkbox" id="e-show-inactive"> Show inactive</label>
+    </section>
+    <div class="grid-wrap"><table id="emp-table" class="grid"></table></div>
+  </main>
+
+  <!-- Settings -->
+  <main id="tab-settings" class="panel" hidden>
+    <form id="settings-form" class="card">
+      <h2>Company on payslip</h2>
+      <label>Company name <input name="company_name" required></label>
+      <label>Address <textarea name="company_address" rows="3"></textarea></label>
+      <h2>Default penalty rules</h2>
+      <p class="muted">Used as the starting values for a new month. You can still change them per month on the Monthly Entry screen.</p>
+      <label>Late: days of basic deducted per late mark <input name="default_late_penalty_days" type="number" min="0" max="31" step="0.5"></label>
+      <label>Uninformed: days of basic deducted per uninformed absence <input name="default_uninformed_penalty_days" type="number" min="0" max="31" step="0.5"></label>
+      <button class="btn primary" type="submit">Save settings</button>
+    </form>
+  </main>
+</div>
+
+<!-- Employee dialog -->
+<dialog id="emp-dialog">
+  <form id="emp-form" method="dialog" class="card">
+    <h2 id="emp-dialog-title">Employee</h2>
+    <div class="two">
+      <label>Employee ID <input name="emp_code" required placeholder="DC/0018"></label>
+      <label>Name <input name="name" required></label>
+      <label>Designation <input name="designation"></label>
+      <label>Department <input name="department" value="Sales"></label>
+      <label>Joining date <input name="joining_date" type="date"></label>
+      <label>Leaving date <input name="leaving_date" type="date"></label>
+      <label>Basic (monthly) <input name="basic" type="number" min="0" step="0.01" required></label>
+      <label>TADA (monthly) <input name="tada" type="number" min="0" step="0.01" required></label>
+    </div>
+    <label class="check"><input name="active" type="checkbox" checked> Active (shows in the monthly sheet)</label>
+    <p class="muted">New months pick up these amounts. Months already saved keep their old amounts until you use "Refresh rates from Employees" on that month.</p>
+    <p id="emp-error" class="error" role="alert"></p>
+    <div class="dialog-actions">
+      <button type="button" class="btn danger" id="emp-delete" hidden>Delete</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="emp-cancel">Cancel</button>
+      <button type="submit" class="btn primary">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" hidden></div>
+<script src="/calc.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
