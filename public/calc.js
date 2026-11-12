@@ -34,6 +34,7 @@
     const late = num(e.late_count);
     const unin = num(e.uninformed_count);
     const incentive = num(e.incentive);
+    const reimbursement = num(e.reimbursement);
     const latePen = num(e.late_penalty_days);
     const uninPen = num(e.uninformed_penalty_days);
 
@@ -49,7 +50,7 @@
     const tadaDeduction = round(perDayTada * tadaLopDays, 2);
     const penalty = round(perDayBasic * penaltyDays, 2);
 
-    const gross = round(basic + tada + incentive, 2);
+    const gross = round(basic + tada + incentive + reimbursement, 2);
     const totalDeductions = round(nonPayable + tadaDeduction + penalty, 2);
     const net = round(gross - totalDeductions, 2);
 
@@ -64,6 +65,7 @@
       basic: round(basic, 2),
       tada: round(tada, 2),
       incentive: round(incentive, 2),
+      reimbursement: round(reimbursement, 2),
       nonPayable,
       tadaDeduction,
       penalty,

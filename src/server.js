@@ -132,7 +132,7 @@ app.delete('/api/employees/:id', wrap(async (req, res) => {
 // ---- Monthly entries ----
 // Typed by Accounts each month. Basic and TADA are NOT here: they come from the Employees tab.
 const ENTRY_FIELDS = ['working_days', 'inactive_days', 'present', 'lwp', 'half_days', 'pl', 'reserved',
-  'late_count', 'uninformed_count', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct'];
+  'late_count', 'uninformed_count', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct', 'reimbursement'];
 const RATE_FIELDS = ['basic', 'tada'];
 
 app.get('/api/month/:month', wrap(async (req, res) => {
@@ -165,7 +165,7 @@ app.put('/api/month/:month', wrap(async (req, res) => {
     if (!emp) throw bad('Unknown employee in the sheet.');
     const v = { employee_id: emp.id, month };
     for (const f of ENTRY_FIELDS) {
-      const max = f === 'incentive' || f === 'sales_target' || f === 'sales_achieved' ? 1e10 : f === 'target_achieved' || f === 'incentive_pct' ? 10000 : 31
+      const max = f === 'incentive' || f === 'reimbursement' || f === 'sales_target' || f === 'sales_achieved' ? 1e10 : f === 'target_achieved' || f === 'incentive_pct' ? 10000 : 31
       v[f] = numField(r[f], `${emp.name}: ${f.replace(/_/g, ' ')}`, { max });
     }
     if (!(v.working_days > 0)) throw bad(`${emp.name}: working days is required.`);

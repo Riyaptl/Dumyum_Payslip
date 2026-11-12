@@ -88,6 +88,7 @@
     ['late_count', 'Late'], ['uninformed_count', 'Uninformed'], ['incentive', 'Incentive', 'money'],
     ['sales_target', 'Sales Target', 'money'], ['sales_achieved', 'Sales Achieved', 'money'],
     ['target_achieved', 'Target Achieved %'], ['incentive_pct', 'Incentive % Applied'],
+    ['reimbursement', 'Reimbursement', 'money'],
   ];
   let state = { month: '', config: null, rows: [] };
 
@@ -185,7 +186,7 @@
           tr.append(td);
           return;
         }
-        const input = h('input', { type: 'number', min: '0', step: ['basic', 'tada', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct'].includes(key) ? '0.01' : '0.5', 'aria-label': label + ' for ' + e.name, 'data-col': key, class: cls || '' });
+        const input = h('input', { type: 'number', min: '0', step: ['basic', 'tada', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct', 'reimbursement'].includes(key) ? '0.01' : '0.5', 'aria-label': label + ' for ' + e.name, 'data-col': key, class: cls || '' });
         input.value = row.vals[key];
         input.addEventListener('input', () => { row.vals[key] = input.value; row.dirty = true; updateNet(row, tr); updateStatus(row, tr); });
         input.addEventListener('keydown', (ev) => {

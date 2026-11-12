@@ -97,6 +97,7 @@ function drawSlip(doc, slip, settings) {
   const ty = 380;
   const earnings = [['Basic', calc.basic], ['TADA', calc.tada]];
   if (calc.incentive > 0) earnings.push(['Incentive', calc.incentive]);
+  if (calc.reimbursement > 0) earnings.push(['Reimbursement', calc.reimbursement]);
   const deductions = [['Non-Payable Days Deduction', calc.nonPayable], ['TADA Deduction', calc.tadaDeduction]];
   if (calc.penalty > 0) deductions.push(['Late / Uninformed Penalty', calc.penalty]);
   const n = Math.max(earnings.length, deductions.length);

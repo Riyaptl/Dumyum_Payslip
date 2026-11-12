@@ -24,6 +24,7 @@ const COLUMNS = [
   { header: 'Sales Achieved', key: 'sales_achieved', width: 14, num: '#,##0.00' },
   { header: 'Target Achieved %', key: 'target_achieved', width: 12, num: '0.##' },
   { header: 'Incentive % Applied', key: 'incentive_pct', width: 12, num: '0.##' },
+  { header: 'Reimbursement', key: 'reimbursement', width: 14, num: '#,##0.00' },
   { header: 'Per Day Basic', key: 'perDayBasic', width: 12, num: '#,##0.00' },
   { header: 'Non-Payable Days Deduction', key: 'nonPayable', width: 15, num: '#,##0.00' },
   { header: 'TADA Deduction', key: 'tadaDeduction', width: 13, num: '#,##0.00' },
@@ -46,7 +47,7 @@ async function buildWorkbook(slips, title) {
       working_days: e.working_days, inactive_days: e.inactive_days, present: e.present, lwp: e.lwp,
       half_days: e.half_days, pl: e.pl, reserved: e.reserved, late_count: e.late_count,
       uninformed_count: e.uninformed_count, basic: s.calc.basic, tada: s.calc.tada,
-      incentive: s.calc.incentive, sales_target: e.sales_target || 0, sales_achieved: e.sales_achieved || 0, target_achieved: e.target_achieved || 0, incentive_pct: e.incentive_pct || 0, perDayBasic: s.calc.perDayBasic, nonPayable: s.calc.nonPayable,
+      incentive: s.calc.incentive, sales_target: e.sales_target || 0, sales_achieved: e.sales_achieved || 0, target_achieved: e.target_achieved || 0, incentive_pct: e.incentive_pct || 0, reimbursement: s.calc.reimbursement, perDayBasic: s.calc.perDayBasic, nonPayable: s.calc.nonPayable,
       tadaDeduction: s.calc.tadaDeduction, penalty: s.calc.penalty, gross: s.calc.gross,
       totalDeductions: s.calc.totalDeductions, net: s.calc.net,
     });

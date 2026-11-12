@@ -5,7 +5,7 @@ require('./env');
 const crypto = require('crypto');
 
 const TYPED_COLS = ['working_days', 'inactive_days', 'present', 'lwp', 'half_days', 'pl', 'reserved',
-  'late_count', 'uninformed_count', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct'];
+  'late_count', 'uninformed_count', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct', 'reimbursement'];
 const ENTRY_COLS = TYPED_COLS.concat(['basic', 'tada']);
 const EMP_COLS = ['emp_code', 'name', 'designation', 'department', 'joining_date', 'leaving_date', 'basic', 'tada', 'active'];
 const dupError = (what) => Object.assign(new Error(`${what} already exists`), { code: 'DUP' });

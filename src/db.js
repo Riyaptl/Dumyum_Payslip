@@ -102,6 +102,7 @@ const SCHEMA = [
     target_achieved ${NUM} NOT NULL DEFAULT 0,
     sales_achieved ${NUM} NOT NULL DEFAULT 0,
     incentive_pct ${NUM} NOT NULL DEFAULT 0,
+    reimbursement ${NUM} NOT NULL DEFAULT 0,
     basic ${NUM} NOT NULL,
     tada ${NUM} NOT NULL,
     updated_at TEXT NOT NULL,
@@ -120,7 +121,7 @@ const DEFAULT_SETTINGS = {
 async function init() {
   for (const sql of SCHEMA) await db.run(sql);
   const have = (await db.all('PRAGMA table_info(monthly_entries)')).map((c) => c.name);
-  for (const col of ['sales_target', 'target_achieved', 'sales_achieved', 'incentive_pct']) {
+  for (const col of ['sales_target', 'target_achieved', 'sales_achieved', 'incentive_pct', 'reimbursement']) {
     if (!have.includes(col)) await db.run(`ALTER TABLE monthly_entries ADD COLUMN ${col} REAL NOT NULL DEFAULT 0`);
   }
   for (const [k, v] of Object.entries(DEFAULT_SETTINGS)) {
