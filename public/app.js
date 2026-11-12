@@ -86,6 +86,8 @@
     ['working_days', 'Working days'], ['inactive_days', 'Inactive'], ['present', 'Present'],
     ['lwp', 'LWP'], ['half_days', 'Half'], ['pl', 'PL'], ['reserved', 'Reserved'],
     ['late_count', 'Late'], ['uninformed_count', 'Uninformed'], ['incentive', 'Incentive', 'money'],
+    ['sales_target', 'Sales Target', 'money'], ['sales_achieved', 'Sales Achieved', 'money'],
+    ['target_achieved', 'Target Achieved %'], ['incentive_pct', 'Incentive % Applied'],
   ];
   let state = { month: '', config: null, rows: [] };
 
@@ -122,7 +124,7 @@
     configDirty = false;
     state.rows = data.rows.map(({ employee, entry }) => {
       const vals = {};
-      for (const [k] of FIELDS) vals[k] = entry ? entry[k] : '';
+      for (const [k] of FIELDS) vals[k] = entry ? (entry[k] ?? '') : '';
       if (!entry) {
         vals.basic = employee.basic;
         vals.tada = employee.tada;
@@ -183,7 +185,7 @@
           tr.append(td);
           return;
         }
-        const input = h('input', { type: 'number', min: '0', step: key === 'basic' || key === 'tada' || key === 'incentive' ? '0.01' : '0.5', 'aria-label': label + ' for ' + e.name, 'data-col': key, class: cls || '' });
+        const input = h('input', { type: 'number', min: '0', step: ['basic', 'tada', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct'].includes(key) ? '0.01' : '0.5', 'aria-label': label + ' for ' + e.name, 'data-col': key, class: cls || '' });
         input.value = row.vals[key];
         input.addEventListener('input', () => { row.vals[key] = input.value; row.dirty = true; updateNet(row, tr); updateStatus(row, tr); });
         input.addEventListener('keydown', (ev) => {

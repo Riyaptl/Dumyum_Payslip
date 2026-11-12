@@ -4,8 +4,9 @@ require('./env');
 //  - MongoDB, used when MONGODB_URI is set (for free hosting on Render with a free MongoDB Atlas cluster)
 const crypto = require('crypto');
 
-const ENTRY_COLS = ['working_days', 'inactive_days', 'present', 'lwp', 'half_days', 'pl', 'reserved',
-  'late_count', 'uninformed_count', 'incentive', 'basic', 'tada'];
+const TYPED_COLS = ['working_days', 'inactive_days', 'present', 'lwp', 'half_days', 'pl', 'reserved',
+  'late_count', 'uninformed_count', 'incentive', 'sales_target', 'sales_achieved', 'target_achieved', 'incentive_pct'];
+const ENTRY_COLS = TYPED_COLS.concat(['basic', 'tada']);
 const EMP_COLS = ['emp_code', 'name', 'designation', 'department', 'joining_date', 'leaving_date', 'basic', 'tada', 'active'];
 const dupError = (what) => Object.assign(new Error(`${what} already exists`), { code: 'DUP' });
 
@@ -102,7 +103,7 @@ function sqliteStore() {
           [cfg.month, cfg.working_days, cfg.late_penalty_days, cfg.uninformed_penalty_days, cfg.pay_date]);
         const sql = `INSERT INTO monthly_entries (employee_id, month, ${ENTRY_COLS.join(', ')}, updated_at)
           VALUES (?, ?, ${ENTRY_COLS.map(() => '?').join(', ')}, ?)
-          ON CONFLICT (employee_id, month) DO UPDATE SET ${ENTRY_COLS.slice(0, 10).map((f) => `${f}=excluded.${f}`).join(', ')},
+          ON CONFLICT (employee_id, month) DO UPDATE SET ${TYPED_COLS.map((f) => `${f}=excluded.${f}`).join(', ')},
             updated_at = excluded.updated_at`;
         for (const v of rows) await t.run(sql, [v.employee_id, v.month, ...ENTRY_COLS.map((f) => v[f]), new Date().toISOString()]);
       });
@@ -228,7 +229,7 @@ function mongoStore() {
         uninformed_penalty_days: cfg.uninformed_penalty_days, pay_date: cfg.pay_date } }, { upsert: true });
       const now = new Date().toISOString();
       for (const v of rows) {
-        const typed = Object.fromEntries(ENTRY_COLS.slice(0, 10).map((f) => [f, v[f]]));
+        const typed = Object.fromEntries(TYPED_COLS.map((f) => [f, v[f]]));
         await d.collection('entries').updateOne({ employee_id: v.employee_id, month: v.month },
           { $set: { ...typed, updated_at: now },
             $setOnInsert: { employee_id: v.employee_id, month: v.month, basic: v.basic, tada: v.tada } }, { upsert: true });

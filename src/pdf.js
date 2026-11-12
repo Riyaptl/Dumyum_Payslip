@@ -152,8 +152,31 @@ function drawSlip(doc, slip, settings) {
   doc.fillColor(DARK).text(words, wx + wl, ny + 66, { lineBreak: false });
   doc.save().lineWidth(0.8).strokeColor(LINE).moveTo(L, ny + 92).lineTo(R, ny + 92).stroke().restore();
 
+    // Incentive details: only when an incentive is paid
+  let footY = ny + 118;
+  if (calc.incentive > 0) {
+    const sy = ny + 108;
+    doc.save().roundedRect(L, sy, R - L, 58, 7).lineWidth(0.8).strokeColor(LINE).stroke().restore();
+    doc.font('B').fontSize(8.5).fillColor(DARK).text('INCENTIVE DETAILS', L + 14, sy + 10);
+    const colW = (R - L - 28) / 5;
+    const pct = (v) => String(Math.round((Number(v) || 0) * 100) / 100) + ' %';
+    const items = [
+      ['Sales Target', money(Number(slip.emp.sales_target) || 0)],
+      ['Sales Achieved', money(Number(slip.emp.sales_achieved) || 0)],
+      ['Target Achieved', pct(slip.emp.target_achieved)],
+      ['Incentive % Applied', pct(slip.emp.incentive_pct)],
+      ['Incentive', money(calc.incentive)],
+    ];
+    items.forEach(([lab, val], i) => {
+      const x = L + 14 + i * colW;
+      doc.font('R').fontSize(8).fillColor(GREY).text(lab, x, sy + 26, { width: colW - 8, lineBreak: false });
+      doc.font('B').fontSize(10).fillColor(DARK).text(val, x, sy + 38, { width: colW - 8, lineBreak: false });
+    });
+    footY = sy + 58 + 26;
+  }
   doc.font('R').fontSize(7.5).fillColor(GREY)
-    .text('-- This is a system-generated document. --', L, ny + 118, { width: R - L, align: 'center' });
+    .text('-- This is a system-generated document. --', L, footY, { width: R - L, align: 'center' });
+
 }
 
 function renderSlips(res, slips, filename, settings) {
